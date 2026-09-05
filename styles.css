@@ -1,12 +1,12 @@
 :root {
-  --primary-color: #22a06b;
-  --primary-dark: #116149;
+  --primary-color: #083f5b;
+  --primary-dark: #04203b;
   --primary-light: #dff8eb;
 
   --accent-color: #ffca5c;
   --accent-dark: #875c00;
 
-  --background-color: #edf8f2;
+  --background-color: #b0ffde;
   --card-color: #ffffff;
   --text-color: #19382d;
   --muted-text-color: #60776f;
@@ -283,6 +283,255 @@ h1 {
 .ecomon-message {
   margin: 0;
   color: var(--muted-text-color);
+}
+
+.final-evolution-effect {
+  position: fixed;
+  z-index: 20;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.final-evolution-flash,
+.final-evolution-veil,
+.final-evolution-glitch,
+.final-evolution-spotlight,
+.final-evolution-lasers,
+.final-evolution-border {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+}
+
+.final-evolution-flash {
+  background: #fffef0;
+}
+
+.final-evolution-veil {
+  background: #050505;
+}
+
+.final-evolution-glitch {
+  background:
+    repeating-linear-gradient(
+      0deg,
+      rgba(255, 255, 255, 0.14) 0,
+      rgba(255, 255, 255, 0.14) 2px,
+      transparent 2px,
+      transparent 7px
+    );
+  mix-blend-mode: screen;
+}
+
+.final-evolution-spotlight {
+  background:
+    radial-gradient(
+      circle at 50% 31%,
+      rgba(255, 239, 120, 0.95) 0,
+      rgba(255, 207, 45, 0.58) 8%,
+      rgba(255, 193, 7, 0.22) 20%,
+      transparent 43%
+    );
+  mix-blend-mode: screen;
+}
+
+.final-evolution-lasers span {
+  position: absolute;
+  top: 31%;
+  left: 50%;
+  width: 58vmax;
+  height: 5px;
+  transform-origin: left center;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 250, 159, 0.98),
+    rgba(255, 211, 35, 0.68) 35%,
+    transparent
+  );
+  box-shadow: 0 0 13px 4px rgba(255, 218, 49, 0.6);
+}
+
+.final-evolution-lasers span:nth-child(1) {
+  transform: rotate(0deg);
+}
+
+.final-evolution-lasers span:nth-child(2) {
+  transform: rotate(45deg);
+}
+
+.final-evolution-lasers span:nth-child(3) {
+  transform: rotate(90deg);
+}
+
+.final-evolution-lasers span:nth-child(4) {
+  transform: rotate(135deg);
+}
+
+.final-evolution-lasers span:nth-child(5) {
+  transform: rotate(180deg);
+}
+
+.final-evolution-lasers span:nth-child(6) {
+  transform: rotate(225deg);
+}
+
+.final-evolution-lasers span:nth-child(7) {
+  transform: rotate(270deg);
+}
+
+.final-evolution-lasers span:nth-child(8) {
+  transform: rotate(315deg);
+}
+
+.final-evolution-border {
+  inset: 10px;
+  border: 10px solid rgba(255, 218, 62, 0.9);
+  box-shadow:
+    0 0 22px 8px rgba(255, 213, 40, 0.78),
+    inset 0 0 22px 8px rgba(255, 213, 40, 0.78);
+  filter: blur(2px);
+}
+
+body.final-evolution > :not(.final-evolution-effect) {
+  transition:
+    opacity 5s ease,
+    filter 5s ease,
+    transform 5s steps(8, end);
+}
+
+body.final-evolution.blackout > :not(.final-evolution-effect) {
+  opacity: 0;
+  filter: grayscale(1) contrast(1.6);
+  transform: translate(2px, -1px);
+  transition:
+    opacity 0.3s ease,
+    filter 0.3s ease,
+    transform 0.3s steps(3, end);
+}
+
+body.final-evolution .final-evolution-flash.active {
+  opacity: 1;
+  transition: opacity 0.25s ease;
+}
+
+body.final-evolution.blackout .final-evolution-veil {
+  opacity: 1;
+}
+
+body.final-evolution.reveal .final-evolution-veil {
+  opacity: 0;
+  transition: opacity 5s ease;
+}
+
+body.final-evolution.reveal > :not(.final-evolution-effect) {
+  opacity: 1;
+  filter: grayscale(0) contrast(1);
+  transform: translate(0);
+  transition:
+    opacity 5s ease,
+    filter 5s ease,
+    transform 5s steps(8, end);
+}
+
+body.final-evolution.reveal .final-evolution-glitch {
+  animation: final-glitch 1s steps(7, end) both;
+}
+
+body.final-evolution.reveal .final-evolution-spotlight {
+  animation: final-spotlight 5s ease-out both;
+}
+
+body.final-evolution.reveal .final-evolution-lasers {
+  animation: final-lasers 5s ease-in-out both;
+}
+
+body.final-evolution.reveal .final-evolution-border {
+  animation: final-border-light 3.2s ease-in-out infinite;
+}
+
+@keyframes final-glitch {
+  0%,
+  100% {
+    opacity: 0;
+    transform: translate(0);
+  }
+
+  10%,
+  42%,
+  76% {
+    opacity: 0.62;
+    transform: translate(-5px, 2px) skewX(-2deg);
+  }
+
+  18%,
+  50%,
+  84% {
+    opacity: 0.18;
+    transform: translate(6px, -2px) skewX(3deg);
+  }
+}
+
+@keyframes final-spotlight {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+
+  40% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.35);
+  }
+}
+
+@keyframes final-lasers {
+  0% {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+
+  50% {
+    opacity: 0.95;
+    transform: scale(1.06);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.08);
+  }
+}
+
+@keyframes final-border-light {
+  0% {
+    opacity: 0;
+    transform: scale(0.99);
+  }
+
+  15%,
+  100% {
+    opacity: 0.42;
+    transform: scale(0.99);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.02);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.final-evolution > :not(.final-evolution-effect) {
+    transition: none;
+  }
+
+  body.final-evolution .final-evolution-veil {
+    transition: none;
+  }
 }
 
 .score-panel {

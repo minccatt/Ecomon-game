@@ -10,10 +10,10 @@
 
     <meta
       name="description"
-      content="환경 실천으로 에코몬을 성장시키는 바이브 코딩 연습 게임"
+      content="에코몬을 성장시켜서 지구를 깨끗하게 만드는 게임"
     />
 
-    <title>에코몬 성장 게임</title>
+    <title>지구 정화 용사 에코몬</title>
 
     <link rel="stylesheet" href="styles.css" />
     <script src="app.js" defer></script>
@@ -23,10 +23,10 @@
     <header class="game-header">
       <div class="container header-content">
         <div>
-          <p class="eyebrow">VIBE CODING PRACTICE</p>
-          <h1>에코몬 성장 게임</h1>
+          <p class="eyebrow"></p>
+          <h1>지구 정화 용사 에코몬</h1>
           <p class="header-description">
-            지속가능한 행동을 선택하고 에코몬을 성장시켜 보세요!
+            에코몬을 성장시켜서 더러운 지구를 깨끗하게 정화시키세요!
           </p>
         </div>
 
@@ -203,6 +203,17 @@
             <span class="action-name">플러그 뽑기</span>
             <span class="action-points">+10점</span>
           </button>
+
+          <button
+            class="action-button"
+            type="button"
+            data-action="이면지 사용하기"
+            data-points="10"
+          >
+            <span class="action-emoji" aria-hidden="true">📄</span>
+            <span class="action-name">이면지 사용</span>
+            <span class="action-points">+10점</span>
+          </button>
         </div>
 
         <p
@@ -276,6 +287,28 @@
         </ul>
       </section>
     </main>
+
+    <div
+      id="final-evolution-effect"
+      class="final-evolution-effect"
+      aria-hidden="true"
+    >
+      <div class="final-evolution-flash" id="final-evolution-flash"></div>
+      <div class="final-evolution-veil"></div>
+      <div class="final-evolution-glitch"></div>
+      <div class="final-evolution-spotlight"></div>
+      <div class="final-evolution-lasers">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <div class="final-evolution-border"></div>
+    </div>
 
     <footer>
       <div class="container">

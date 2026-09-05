@@ -74,11 +74,71 @@ const nextStageMessage =
 const statusMessage = document.querySelector("#status-message");
 const missionText = document.querySelector("#mission-text");
 const recordList = document.querySelector("#record-list");
+const finalEvolutionFlash = document.querySelector(
+  "#final-evolution-flash"
+);
 
 // 현재 게임 상태
+const storageKey = "ecomon-game-state";
 let ecoScore = 0;
 let actionCount = 0;
 let records = [];
+let finalEvolutionRun = 0;
+
+function saveGameState() {
+  try {
+    localStorage.setItem(
+      storageKey,
+      JSON.stringify({
+        ecoScore: ecoScore,
+        actionCount: actionCount,
+        records: records
+      })
+    );
+  } catch (error) {
+    // 저장할 수 없는 환경에서도 게임은 계속 실행합니다.
+  }
+}
+
+function loadGameState() {
+  try {
+    const savedState = JSON.parse(
+      localStorage.getItem(storageKey)
+    );
+
+    if (!savedState || typeof savedState !== "object") {
+      return;
+    }
+
+    if (
+      Number.isFinite(savedState.ecoScore) &&
+      savedState.ecoScore >= 0
+    ) {
+      ecoScore = savedState.ecoScore;
+    }
+
+    if (
+      Number.isInteger(savedState.actionCount) &&
+      savedState.actionCount >= 0
+    ) {
+      actionCount = savedState.actionCount;
+    }
+
+    if (Array.isArray(savedState.records)) {
+      records = savedState.records.filter(function (record) {
+        return (
+          record &&
+          typeof record.action === "string" &&
+          Number.isFinite(record.points)
+        );
+      });
+    }
+  } catch (error) {
+    ecoScore = 0;
+    actionCount = 0;
+    records = [];
+  }
+}
 
 /**
  * 현재 점수에 맞는 에코몬 단계 번호를 반환합니다.
@@ -185,22 +245,78 @@ function renderRecords() {
  * 에코몬이 점프하는 애니메이션을 실행합니다.
  */
 function playBounceAnimation() {
-  ecomonEmoji.classList.remove("bounce");
+  ecomonEmoji.classList.remove("bounce", "evolve");
 
   // 같은 애니메이션을 다시 실행할 수 있도록
   // 브라우저가 변경사항을 먼저 계산하게 합니다.
   void ecomonEmoji.offsetWidth;
 
   ecomonEmoji.classList.add("bounce");
+  ecomonEmoji.addEventListener(
+    "animationend",
+    function removeBounceClass(event) {
+      if (event.animationName === "bounce") {
+        ecomonEmoji.classList.remove("bounce");
+      }
+    },
+    { once: true }
+  );
 }
 
 /**
  * 에코몬 진화 애니메이션을 실행합니다.
  */
 function playEvolutionAnimation() {
-  ecomonEmoji.classList.remove("evolve");
+  ecomonEmoji.classList.remove("bounce", "evolve");
   void ecomonEmoji.offsetWidth;
   ecomonEmoji.classList.add("evolve");
+  ecomonEmoji.addEventListener(
+    "animationend",
+    function removeEvolutionClass(event) {
+      if (event.animationName === "evolve") {
+        ecomonEmoji.classList.remove("evolve");
+      }
+    },
+    { once: true }
+  );
+}
+
+function playFinalEvolutionAnimation() {
+  const currentRun = finalEvolutionRun + 1;
+  finalEvolutionRun = currentRun;
+  document.body.classList.remove("final-evolution");
+  void document.body.offsetWidth;
+  document.body.classList.add("final-evolution");
+
+  let flashCount = 0;
+
+  function playNextFlash() {
+    finalEvolutionFlash.classList.add("active");
+
+    window.setTimeout(function () {
+      if (currentRun !== finalEvolutionRun) {
+        return;
+      }
+
+      finalEvolutionFlash.classList.remove("active");
+      flashCount += 1;
+
+      if (flashCount < 3) {
+        window.setTimeout(playNextFlash, 500);
+        return;
+      }
+
+      document.body.classList.add("blackout");
+
+      window.setTimeout(function () {
+        if (currentRun === finalEvolutionRun) {
+          document.body.classList.add("reveal");
+        }
+      }, 2000);
+    }, 250);
+  }
+
+  playNextFlash();
 }
 
 /**
@@ -225,7 +341,47 @@ actionButtons.forEach(function (button) {
     statusMessage.textContent =
       "아직 환경 실천 기능이 완성되지 않았습니다. MISSION.md를 확인하세요.";
 
-    // TODO: 이 부분에 환경 실천 기능을 작성하세요.
+    const action = button.dataset.action;
+    const points = Number(button.dataset.points);
+    const previousStageIndex = getCurrentStageIndex();
+
+    ecoScore += points;
+    actionCount += 1;
+    const comboBonus = actionCount % 3 === 0 ? 5 : 0;
+    ecoScore += comboBonus;
+
+    records.unshift({
+      action: action,
+      points: points
+    });
+
+    saveGameState();
+
+    render();
+
+    const currentStageIndex = getCurrentStageIndex();
+    const totalPoints = points + comboBonus;
+    let completionMessage =
+      `${action} 실천 완료! 에코 점수 ${totalPoints}점을 얻었습니다.`;
+
+    if (comboBonus > 0) {
+      completionMessage += " 3회 연속 실천 달성! 보너스 +5점";
+    }
+
+    if (currentStageIndex !== previousStageIndex) {
+      completionMessage +=
+        ` 🎉 ${stages[currentStageIndex].name}으로 진화했어요!`;
+      statusMessage.textContent = completionMessage;
+
+      if (currentStageIndex === stages.length - 1) {
+        playFinalEvolutionAnimation();
+      } else {
+        playEvolutionAnimation();
+      }
+    } else {
+      statusMessage.textContent = completionMessage;
+      playBounceAnimation();
+    }
   });
 });
 
@@ -263,9 +419,23 @@ resetButton.addEventListener("click", function () {
     return;
   }
 
+  finalEvolutionRun += 1;
+  document.body.classList.remove(
+    "final-evolution",
+    "blackout",
+    "reveal"
+  );
+  finalEvolutionFlash.classList.remove("active");
+
   ecoScore = 0;
   actionCount = 0;
   records = [];
+
+  try {
+    localStorage.removeItem(storageKey);
+  } catch (error) {
+    // 저장소를 사용할 수 없어도 화면 초기화는 진행합니다.
+  }
 
   actionButtons.forEach(function (button) {
     button.classList.remove("recommended");
@@ -281,6 +451,7 @@ resetButton.addEventListener("click", function () {
 });
 
 /**
- * 페이지를 처음 열었을 때 화면을 표시합니다.
+ * 페이지를 처음 열었을 때 저장된 상태를 불러오고 화면을 표시합니다.
  */
+loadGameState();
 render();
