@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+
+    <meta
+      name="description"
+      content="환경 실천으로 에코몬을 성장시키는 바이브 코딩 연습 게임"
+    />
+
+    <title>에코몬 성장 게임</title>
+
+    <link rel="stylesheet" href="styles.css" />
+    <script src="app.js" defer></script>
+  </head>
+
+  <body>
+    <header class="game-header">
+      <div class="container header-content">
+        <div>
+          <p class="eyebrow">VIBE CODING PRACTICE</p>
+          <h1>에코몬 성장 게임</h1>
+          <p class="header-description">
+            지속가능한 행동을 선택하고 에코몬을 성장시켜 보세요!
+          </p>
+        </div>
+
+        <div class="header-badge" aria-label="게임 목표">
+          목표 100점
+        </div>
+      </div>
+    </header>
+
+    <main class="container game-layout">
+      <!-- 에코몬 화면 -->
+      <section
+        class="card ecomon-card"
+        aria-labelledby="ecomon-section-title"
+      >
+        <div class="section-heading">
+          <div>
+            <p class="section-label">MY ECOMON</p>
+            <h2 id="ecomon-section-title">나의 에코몬</h2>
+          </div>
+
+          <span id="stage-badge" class="stage-badge">
+            1단계
+          </span>
+        </div>
+
+        <div
+          id="ecomon-area"
+          class="ecomon-area"
+          aria-live="polite"
+        >
+          <div
+            id="ecomon-emoji"
+            class="ecomon-emoji"
+            role="img"
+            aria-label="알 상태의 에코몬"
+          >
+            🥚
+          </div>
+
+          <h3 id="ecomon-name" class="ecomon-name">
+            잠든 에코몬 알
+          </h3>
+
+          <p id="ecomon-message" class="ecomon-message">
+            환경 실천으로 에너지를 모아 알을 깨워 주세요.
+          </p>
+        </div>
+
+        <div class="score-panel">
+          <div class="score-row">
+            <span>에코 에너지</span>
+
+            <strong>
+              <span id="eco-score">0</span>
+              <span aria-hidden="true"> / </span>
+              <span id="goal-score">100</span>
+            </strong>
+          </div>
+
+          <div
+            id="progress-track"
+            class="progress-track"
+            role="progressbar"
+            aria-label="에코몬 성장 진행률"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            aria-valuenow="0"
+          >
+            <div id="progress-bar" class="progress-bar"></div>
+          </div>
+
+          <p id="next-stage-message" class="next-stage-message">
+            새싹 에코몬까지 20점 남았습니다.
+          </p>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-box">
+            <span class="stat-icon" aria-hidden="true">✨</span>
+            <strong id="action-count">0</strong>
+            <span>실천 횟수</span>
+          </div>
+
+          <div class="stat-box">
+            <span class="stat-icon" aria-hidden="true">🌟</span>
+            <strong id="evolution-count">0</strong>
+            <span>진화 횟수</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 환경 실천 행동 -->
+      <section
+        class="card action-card"
+        aria-labelledby="action-section-title"
+      >
+        <div class="section-heading">
+          <div>
+            <p class="section-label">ECO ACTION</p>
+            <h2 id="action-section-title">
+              오늘의 환경 실천
+            </h2>
+          </div>
+        </div>
+
+        <p class="section-description">
+          실천한 행동을 선택해 에코 에너지를 모으세요.
+        </p>
+
+        <div class="action-grid">
+          <button
+            class="action-button"
+            type="button"
+            data-action="텀블러 사용하기"
+            data-points="10"
+          >
+            <span class="action-emoji" aria-hidden="true">🥤</span>
+            <span class="action-name">텀블러 사용</span>
+            <span class="action-points">+10점</span>
+          </button>
+
+          <button
+            class="action-button"
+            type="button"
+            data-action="사용하지 않는 조명 끄기"
+            data-points="10"
+          >
+            <span class="action-emoji" aria-hidden="true">💡</span>
+            <span class="action-name">조명 끄기</span>
+            <span class="action-points">+10점</span>
+          </button>
+
+          <button
+            class="action-button"
+            type="button"
+            data-action="급식 잔반 줄이기"
+            data-points="15"
+          >
+            <span class="action-emoji" aria-hidden="true">🍚</span>
+            <span class="action-name">잔반 줄이기</span>
+            <span class="action-points">+15점</span>
+          </button>
+
+          <button
+            class="action-button"
+            type="button"
+            data-action="가까운 거리 걷기"
+            data-points="20"
+          >
+            <span class="action-emoji" aria-hidden="true">🚶</span>
+            <span class="action-name">가까운 거리 걷기</span>
+            <span class="action-points">+20점</span>
+          </button>
+
+          <button
+            class="action-button"
+            type="button"
+            data-action="올바르게 분리배출하기"
+            data-points="15"
+          >
+            <span class="action-emoji" aria-hidden="true">♻️</span>
+            <span class="action-name">분리배출</span>
+            <span class="action-points">+15점</span>
+          </button>
+
+          <button
+            class="action-button"
+            type="button"
+            data-action="사용하지 않는 플러그 뽑기"
+            data-points="10"
+          >
+            <span class="action-emoji" aria-hidden="true">🔌</span>
+            <span class="action-name">플러그 뽑기</span>
+            <span class="action-points">+10점</span>
+          </button>
+        </div>
+
+        <p
+          id="status-message"
+          class="status-message"
+          aria-live="polite"
+        >
+          행동 버튼을 선택해 주세요.
+        </p>
+
+        <div class="mission-box">
+          <div>
+            <span class="mission-label">오늘의 추천 미션</span>
+            <p id="mission-text">
+              어떤 행동을 할지 고민된다면 미션을 받아 보세요.
+            </p>
+          </div>
+
+          <button
+            id="mission-button"
+            class="secondary-button"
+            type="button"
+          >
+            미션 뽑기 🎲
+          </button>
+        </div>
+      </section>
+
+      <!-- 활동 기록 -->
+      <section
+        class="card record-card"
+        aria-labelledby="record-section-title"
+      >
+        <div class="section-heading">
+          <div>
+            <p class="section-label">ECO LOG</p>
+            <h2 id="record-section-title">환경 실천 기록</h2>
+          </div>
+
+          <button
+            id="reset-button"
+            class="text-button"
+            type="button"
+          >
+            게임 초기화
+          </button>
+        </div>
+
+        <ul id="record-list" class="record-list">
+          <li class="empty-record">
+            아직 실천 기록이 없습니다.
+          </li>
+        </ul>
+      </section>
+
+      <!-- 안내 -->
+      <section class="notice" aria-labelledby="notice-title">
+        <h2 id="notice-title">게임 안내</h2>
+
+        <ul>
+          <li>
+            에코 점수는 실제 탄소 감축량이 아닌 수업용 게임
+            점수입니다.
+          </li>
+          <li>
+            AI가 작성한 코드는 반드시 직접 실행하고 확인하세요.
+          </li>
+          <li>
+            개인정보, 비밀번호, API 키를 입력하지 마세요.
+          </li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <div class="container">
+        <p>
+          지속가능한 발전을 위한 바이브 코딩 연습 프로젝트
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>

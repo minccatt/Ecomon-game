@@ -1,0 +1,12 @@
+{
+  "name": "ecomon-growth-game",
+  "version": "1.0.0",
+  "private": true,
+  "description": "지속가능한 환경 행동으로 에코몬을 성장시키는 바이브 코딩 연습 게임",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
